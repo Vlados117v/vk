@@ -1,13 +1,14 @@
 <?php
 	namespace App\Http\Controllers;
+	
 	use App\Http\Controllers\Controller;
+	use Illuminate\Http\Request;
 	
 	class TestController extends Controller
 	{
-		public function show($param)
-		{
-			return $param; // выводим параметр в браузер
+		public function show()
+		{ 
+			return !!!!!!!!!;
 		}
 	}
-
 ?>
