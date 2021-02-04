@@ -18,6 +18,7 @@ class CreateCommentTable extends Migration
             $table->integer('user_id');
             $table->integer('to_user_id');
             $table->boolean('is_answer');
+            $table->integer('is_answer_id');
             $table->text('title');            
             $table->text('comment_text');
             $table->timestamps();

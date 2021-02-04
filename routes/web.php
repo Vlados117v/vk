@@ -19,14 +19,14 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::post('/add_comment/{to_user_id}','HomeController@add_comment');
+Route::post('/add_comment/{to_user_id}','CommentController@add_comment');
 
-Route::get('/delete_comment','HomeController@delete_comment');
+Route::get('/delete_comment','CommentController@delete_comment');
 
 Route::get('/all','HomeController@show_users');
 
 Route::get('/any_user_comments/{user_id}', 'HomeController@any_user_comments');
 
-Route::post('/get_more_comments', function () {return 'Ajax был здесь';});
+Route::get('/get_more_comments', 'HomeController@get_more_comments');
 
-Route::get('/my_comments','HomeController@my_comments');
+Route::get('/my_comments','CommentController@my_comments');

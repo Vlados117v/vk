@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">  
 </head>
 <body>
     <div id="app">
@@ -76,6 +76,23 @@
             @yield('content')
         </main>
     </div>
-    
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function () {    
+ $('#get_more_comments').click(function () {
+    var test = $('#get_more_comments').val();
+    $.ajax({
+      url: '/get_more_comments',
+      type: 'GET',
+      data: test,
+      success: function(data) {
+        var x = JSON.parse(data);
+        console.log(x);
+    }
+    });
+});
+ });
+</script> 
 </body>
+
 </html>
