@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Comments;
 use App\User;
-//use App\Http\Controllers\CommentController;
 
 class HomeController extends Controller
 {
@@ -36,10 +35,15 @@ class HomeController extends Controller
     }
 
 
-    public function get_more_comments()
+    public function get_more_comments(Request $request)
     {   
-        //$comments = Comments::where('user_id','=',$user_id)->limit(5)->offset(5)->get();
-        return 1;
+        $user_id = intval($request->test);
+        $comments = Comments::where('user_id','=',$user_id)->limit(5)->offset(5)->get();
+        $data=[];
+        foreach ($comments as $comment) {
+            array_push($data, $comment);
+        }
+        return json_encode($data);
     }
 
 

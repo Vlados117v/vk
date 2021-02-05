@@ -15,7 +15,6 @@
             <p>{{$comment->comment_text}}</p><br>
            @if ($user->id == $comment->user_id) <button name="delete" value="{{$comment->id}}">Удалить</button><br>
            @endif
-            <a href="">Ответить</a>
           </form>
 
 

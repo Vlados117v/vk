@@ -14,7 +14,7 @@
             <h1>{{$comment->title}}</h1>
             <p>{{$comment->comment_text}}</p><br>
             <button name="delete" value="{{$comment->id}}">Удалить</button><br>
-            <a href="">Ответить</a>
+            <a href="/answer{{$comment->id}}">Ответить</a>
           </form>
 
 

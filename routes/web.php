@@ -13,8 +13,6 @@
 
 Route::get('/', function () {return view('welcome');});
 
-Route::get('test/show/{param}', 'TestController@show');	
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -30,3 +28,7 @@ Route::get('/any_user_comments/{user_id}', 'HomeController@any_user_comments');
 Route::get('/get_more_comments', 'HomeController@get_more_comments');
 
 Route::get('/my_comments','CommentController@my_comments');
+
+Route::get('/answer{to_comment_id}','CommentController@answer');
+
+Route::post('/add_answer/{comment_id}','CommentController@add_answer');

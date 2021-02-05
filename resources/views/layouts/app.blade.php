@@ -84,10 +84,17 @@ $(document).ready(function () {
     $.ajax({
       url: '/get_more_comments',
       type: 'GET',
-      data: test,
+      data: {test : test},
+      dataType: 'json',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
       success: function(data) {
-        var x = JSON.parse(data);
-        console.log(x);
+        var text = data;
+        for(var i = 0; i<text.length; i++){
+            $('.card-body').append('<br><h1>'+text[i].title+'</h1><p>'+text[i].comment_text+'</p><br>')
+        };
+        console.log(text);
     }
     });
 });
