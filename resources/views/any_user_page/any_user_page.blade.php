@@ -11,6 +11,16 @@
 
           @forelse ($comments as $comment)
           <form action="/delete_comment">
+            @if (!is_null($comment->is_answer_id))
+               @foreach ($comments as $second_iteration_comm)
+                  @if ($comment->is_answer_id == $second_iteration_comm->id)
+                     <p>-------------------------------------------</p>
+                     <h1>{{$second_iteration_comm->title}}</h1>
+                     <p>{{$second_iteration_comm->comment_text}}</p><br>
+                     <p>-------------------------------------------</p>
+                  @endif
+                @endforeach
+            @endif     
             <h1>{{$comment->title}}</h1>
             <p>{{$comment->comment_text}}</p><br>
            @if ($user->id == $comment->user_id) <button name="delete" value="{{$comment->id}}">Удалить</button><br>
@@ -34,7 +44,7 @@
         </div>
       </div>
       @if(count($comments) > 0)
-<input type="button" name="hi" value = "{{$to_user_id}}" id="get_more_comments">    
+<input type="button" name="hi" value = "{{$to_user_id}}" id="any_get_more_comments">    
     <div class="form">
       <form action="/add_comment/{{$to_user_id}}" method="post">
         {{ csrf_field() }}
@@ -44,20 +54,8 @@
       </form>
           </div>
          @endif 
+         <div id="user_id" class="{{$user->id}}" ></div>
     </div>
   </div>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script>
- $('#get_more_comments').click(function () {
-  $.ajax({
-    url: '/get_more_comments',
-    type: 'POST',
-    data: {},
-    success: function() {
-      console.log(1);
-    }
-  });
-});
-</script>
 @endsection

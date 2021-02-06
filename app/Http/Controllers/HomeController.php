@@ -29,7 +29,7 @@ class HomeController extends Controller
             return view('any_user_page.any_user_page', compact('comments', 'to_user_id', 'user'));
         } else {
             $comments = Comments::where('to_user_id','=',$user_id)->take(5)->get();  
-            return view('any_user_page.just_for_watch_any_user_page', compact('comments'));           
+            return view('any_user_page.just_for_watch_any_user_page', compact('comments', 'to_user_id'));           
         }
 
     }
@@ -38,12 +38,13 @@ class HomeController extends Controller
     public function get_more_comments(Request $request)
     {   
         $user_id = intval($request->test);
-        $comments = Comments::where('user_id','=',$user_id)->limit(5)->offset(5)->get();
+        //$comments = Comments::where('user_id','=',$user_id)->limit(5)->offset(5)->get();
+        $comments = Comments::where('to_user_id','=',$user_id)->get();
         $data=[];
         foreach ($comments as $comment) {
             array_push($data, $comment);
         }
-        return json_encode($data);
+        return json_encode($comments);
     }
 
 

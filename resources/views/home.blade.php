@@ -11,6 +11,16 @@
 
           @forelse ($comments as $comment)
           <form action="/delete_comment">
+            @if (!is_null($comment->is_answer_id))
+               @foreach ($comments as $second_iteration_comm)
+                  @if ($comment->is_answer_id == $second_iteration_comm->id)
+                     <p>-------------------------------------------</p>
+                     <h1>{{$second_iteration_comm->title}}</h1>
+                     <p>{{$second_iteration_comm->comment_text}}</p><br>
+                     <p>-------------------------------------------</p>
+                  @endif
+                @endforeach
+            @endif         
             <h1>{{$comment->title}}</h1>
             <p>{{$comment->comment_text}}</p><br>
             <button name="delete" value="{{$comment->id}}">Удалить</button><br>

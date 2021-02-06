@@ -46,13 +46,11 @@ public function answer($to_comment_id)
 
 public function add_answer(Request $request, $comment_id)
 {   
-    $comments = Comments::where('id','=',$comment_id)->first();
-    $text = $request->text;
-    $title = $request->title; 
-    $answer_comment = $comments->comment_text;
+    $comments = Comments::where('id','=',$comment_id)->first(); //нахожу комментарий на который отвечаю
+    $text = $request->text; // мой ответ
+    $title = $request->title;  // мой ответ
     $user = \Auth::user();
-    $answer_comment = "Ответ на комментарий: ".$answer_comment."___ОТВЕЧАЮ___".$text;
-    Comments::insert(['user_id' => $user->id, 'to_user_id' => $user->id,'title' =>$title, 'comment_text' => $answer_comment]);
+    Comments::insert(['user_id' => $user->id, 'to_user_id' => $user->id,'title' =>$title, 'comment_text' => $text, 'is_answer_id' => $comment_id]);
     $to_user_id = $user->id;
     $comments = Comments::where('to_user_id','=',$user->id)->take(5)->get();
     return view('home', compact('comments', 'to_user_id'));

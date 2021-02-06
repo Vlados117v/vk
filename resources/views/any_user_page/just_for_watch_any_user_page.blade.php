@@ -16,7 +16,7 @@
                       </form>
                     @endforeach
 
-                    <input type="button" name="hi" id="get_more_comments">
+                    <input type="button" name="hi" value = "{{$to_user_id}}" id="spy_get_more_comments">
                 </div>
             </div>
         </div>

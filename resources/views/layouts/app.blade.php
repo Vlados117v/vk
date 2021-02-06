@@ -40,65 +40,140 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </li>
+                        @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                        </li>
+                        @endif
                         @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->name }} <span class="caret"></span>
+                            </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                    @endguest
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div>
+    <main class="py-4">
+        @yield('content')
+    </main>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-$(document).ready(function () {    
- $('#get_more_comments').click(function () {
-    var test = $('#get_more_comments').val();
-    $.ajax({
-      url: '/get_more_comments',
-      type: 'GET',
-      data: {test : test},
-      dataType: 'json',
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    $(document).ready(function () {    
+       $('#get_more_comments').click(function () {
+        var test = $('#get_more_comments').val();
+        $.ajax({
+          url: '/get_more_comments',
+          type: 'GET',
+          data: {test : test},
+          dataType: 'json',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-      success: function(data) {
-        var text = data;
-        for(var i = 0; i<text.length; i++){
-            $('.card-body').append('<br><h1>'+text[i].title+'</h1><p>'+text[i].comment_text+'</p><br>')
+        success: function(data) {
+            var comment = data;
+            for(var i = 5; i<comment.length; i++){
+              if (comment[i].is_answer_id !== null) {
+                for(var j = 0; j<comment.length; j++){
+                    if (comment[j].id == comment[i].is_answer_id) {
+                        $('.card-body').append('<br><p>FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</p><h1>'+comment[j].title+'</h1><p>'+comment[j].comment_text+'</p><p>FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</p><br>') 
+                    }
+                }
+                $('.card-body').append('<form action="/delete_comment"><br><h1>'+comment[i].title+'</h1><p>'+comment[i].comment_text+'</p><br><button name="delete" value="'+ comment[i].id +'">Удалить</button><br><a href="/answer'+ comment[i].id +'">Ответить</a></form>')    
+            } else {
+                $('.card-body').append('<form action="/delete_comment"><br><h1>'+comment[i].title+'</h1><p>'+comment[i].comment_text+'</p><br><button name="delete" value="'+ comment[i].id +'">Удалить</button><br><a href="/answer'+ comment[i].id +'">Ответить</a></form>')
+            }
         };
-        console.log(text);
+        console.log(comment);
     }
-    });
 });
- });
+        $('#get_more_comments').hide();
+    });
+
+       $('#any_get_more_comments').click(function () {
+        var test = $('#any_get_more_comments').val();
+        $.ajax({
+          url: '/get_more_comments',
+          type: 'GET',
+          data: {test : test},
+          dataType: 'json',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(data) {
+            var comment = data;
+            var id = $('#user_id').attr('class');
+            for(var i = 5; i<comment.length; i++){
+              if (comment[i].is_answer_id !== null) {
+                for(var j = 0; j<comment.length; j++){
+                    if (comment[j].id == comment[i].is_answer_id) {
+                        $('.card-body').append('<br><p>FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</p><h1>'+comment[j].title+'</h1><p>'+comment[j].comment_text+'</p><p>FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</p><br>') 
+                    }
+                }
+                if (comment[i].user_id == id) {    
+                    $('.card-body').append('<form action="/delete_comment"><br><h1>'+comment[i].title+'</h1><p>'+comment[i].comment_text+'</p><br><button name="delete" value="'+ comment[i].id +'">Удалить</button><br></form>');
+                    console.log('comment');
+                } else {
+                    $('.card-body').append('<form action=""><br><h1>'+comment[i].title+'</h1><p>'+comment[i].comment_text+'</p><br></form>') 
+                }   
+            } else {
+
+                if (comment[i].user_id == id) {    
+                    $('.card-body').append('<form action="/delete_comment"><br><h1>'+comment[i].title+'</h1><p>'+comment[i].comment_text+'</p><br><button name="delete" value="'+ comment[i].id +'">Удалить</button><br></form>');
+                    console.log('comment');
+                } else {
+                    $('.card-body').append('<form action=""><br><h1>'+comment[i].title+'</h1><p>'+comment[i].comment_text+'</p><br></form>') 
+                }
+
+            }
+        };
+        console.log(id);
+    }
+});     
+        $('#any_get_more_comments').hide();
+    });
+
+       $('#spy_get_more_comments').click(function () {
+        var test = $('#spy_get_more_comments').val();
+        $.ajax({
+          url: '/get_more_comments',
+          type: 'GET',
+          data: {test : test},
+          dataType: 'json',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(data) {
+            var comment = data;
+            for(var i = 5; i<comment.length; i++){
+             $('.card-body').append('<form action=""><br><h1>'+comment[i].title+'</h1><p>'+comment[i].comment_text+'</p><br></form>'); 
+        };
+        console.log(id);
+    }
+}); 
+        $('#spy_get_more_comments').hide();
+    });
+
+   });
 </script> 
 </body>
 
