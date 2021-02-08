@@ -10,19 +10,20 @@ use App\User;
 class CommentController extends Controller
 {
 
-    public function __construct()
-    {   
-       $this->middleware('auth');
-   }
+public function __construct()
+{   
+    $this->middleware('auth');
+}
 
-   public function delete_comment(Request $request)
-   {
+public function delete_comment(Request $request)
+{
     $comment_id = intval($request->delete);
+    $to_user_id_req = Comments::where('id','=',$comment_id)->first();
+    $to_user_id = $to_user_id_req->to_user_id;
     Comments::where('id','=',$comment_id)->delete();
     $user = \Auth::user();
-    $to_user_id = $user->id;
-    $comments = Comments::where('to_user_id','=',$user->id)->take(5)->get();
-    return view('any_user_page.any_user_page', compact('comments', 'to_user_id', 'user'));     
+    $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
+    return view('home', compact('comments', 'to_user_id', 'user'));     
 }
 
 public function add_comment(Request $request,$to_user_id)
@@ -32,7 +33,7 @@ public function add_comment(Request $request,$to_user_id)
     $user = \Auth::user();
     Comments::insert(['user_id' => $user->id, 'to_user_id' => $to_user_id,'title' =>$title, 'comment_text' => $text]);
     $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
-    return view('any_user_page.any_user_page', compact('comments', 'to_user_id', 'user'));
+    return view('home', compact('comments', 'to_user_id', 'user'));
 }
 
 public function answer($to_comment_id)
@@ -50,12 +51,23 @@ public function add_answer(Request $request, $comment_id)
     $text = $request->text; // мой ответ
     $title = $request->title;  // мой ответ
     $user = \Auth::user();
-    Comments::insert(['user_id' => $user->id, 'to_user_id' => $user->id,'title' =>$title, 'comment_text' => $text, 'is_answer_id' => $comment_id]);
-    $to_user_id = $user->id;
-    $comments = Comments::where('to_user_id','=',$user->id)->take(5)->get();
-    return view('home', compact('comments', 'to_user_id'));
+    $to_user_id = $comments->to_user_id;
+    Comments::insert(['user_id' => $user->id, 'to_user_id' => $to_user_id,'title' =>$title, 'comment_text' => $text, 'is_answer_id' => $comment_id]);
+    $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
+    return view('home', compact('comments', 'to_user_id', 'user'));
 }
 
+public function get_more_comments(Request $request)
+{   
+    $user_id = intval($request->test);
+        //$comments = Comments::where('user_id','=',$user_id)->limit(5)->offset(5)->get();
+    $comments = Comments::where('to_user_id','=',$user_id)->get();
+    $data=[];
+    foreach ($comments as $comment) {
+        array_push($data, $comment);
+    }
+    return json_encode($comments);
+}
 
 public function my_comments()
 {   

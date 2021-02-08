@@ -11,11 +11,11 @@
 |
 */
 
-Route::get('/', function () {return view('welcome');});
+Route::get('/', 'HomeController@welcome');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home{this_user_id?}', 'HomeController@index')->name('home');
 
 Route::post('/add_comment/{to_user_id}','CommentController@add_comment');
 
@@ -25,10 +25,18 @@ Route::get('/all','HomeController@show_users');
 
 Route::get('/any_user_comments/{user_id}', 'HomeController@any_user_comments');
 
-Route::get('/get_more_comments', 'HomeController@get_more_comments');
+Route::get('/get_more_comments', 'CommentController@get_more_comments');
 
 Route::get('/my_comments','CommentController@my_comments');
 
-Route::get('/answer{to_comment_id}','CommentController@answer');
+Route::get('/answer/{to_comment_id}','CommentController@answer');
 
 Route::post('/add_answer/{comment_id}','CommentController@add_answer');
+
+Route::get('/library_main','BooksController@library_main');
+
+Route::get('/new_book','BooksController@new_book_page');
+
+Route::get('/add_new_book','BooksController@add_new_book');
+
+Route::get('/delete_book/{book_id}','BooksController@delete_book');

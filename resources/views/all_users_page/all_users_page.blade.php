@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <ul>
                     @foreach ($users as $user)
-                    <li><p><a href="/any_user_comments/{{$user->id}}">{{$user->name}} - {{$user->email}}</a></p></li>
+                    <li><p><a href="/home{{$user->id}}">{{$user->name}} - {{$user->email}}</a></p></li>
                     @endforeach
                 </ul>
                 </div>
