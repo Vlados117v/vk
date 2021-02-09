@@ -60,19 +60,19 @@ class CommentController extends Controller
     $comments = Comments::where('id','=',$comment_id)->first(); //нахожу комментарий на который отвечаю
     $user = \Auth::user();
     if (($comments !== null) && ($user !== null)) {             //Проверка наличия комментария
-    $text = $request->text; // мой ответ
-    $title = $request->title;  // мой ответ
-    $to_user_id = $comments->to_user_id;
-    Comments::insert(['user_id' => $user->id, 'to_user_id' => $to_user_id,'title' =>$title, 'comment_text' => $text, 'is_answer_id' => $comment_id]);
-    $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
-    return view('home', compact('comments', 'to_user_id', 'user'));
-}  else {
-    return view('welcome', compact('user'));         
-} 
-}
+        $text = $request->text; // мой ответ
+        $title = $request->title;  // мой ответ
+        $to_user_id = $comments->to_user_id;
+        Comments::insert(['user_id' => $user->id, 'to_user_id' => $to_user_id,'title' =>$title, 'comment_text' => $text, 'is_answer_id' => $comment_id]);
+        $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
+        return view('home', compact('comments', 'to_user_id', 'user'));
+        }  else {
+        return view('welcome', compact('user'));         
+        } 
+    }
 
-public function get_more_comments(Request $request)
-{   
+    public function get_more_comments(Request $request)
+    {   
     $user_id = intval($request->test);
         //$comments = Comments::where('user_id','=',$user_id)->limit(5)->offset(5)->get();
     $comments = Comments::where('to_user_id','=',$user_id)->get();
@@ -83,13 +83,13 @@ public function get_more_comments(Request $request)
     return json_encode($comments);
 }
 
-public function my_comments()
-{   
+    public function my_comments()
+    {   
 
     $user = \Auth::user();
     $to_user_id = $user->id;
     $comments = Comments::where('user_id','=',$user->id)->get();
     return view('my_comments.my_comments', compact('comments'));
 
-}
+    }
 }

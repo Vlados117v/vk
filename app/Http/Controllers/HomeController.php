@@ -25,11 +25,11 @@ class HomeController extends Controller
         $user = \Auth::user();
         return view('welcome', compact('user'));      
     }
-      
-      public function checkMD()
-  {
-    dd('You are in Controller Method');
-  }    
+    
+    public function checkMD()
+    {
+        dd('You are in Controller Method');
+    }    
     public function index($this_user_id = 0)
     {   
         if (\Auth::check()){
