@@ -47,3 +47,7 @@ Route::get('/add_friend/{to_user_id}','FriendController@add_friend');
 
 Route::get('/access_for_all/{book_id}','BooksController@access_for_all');
 
+Route::get('/change_book/{book_id}','BooksController@change_book');
+
+Route::get('/add_change_book/{book_id}','BooksController@add_change_book');
+

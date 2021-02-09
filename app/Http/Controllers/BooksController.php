@@ -24,6 +24,36 @@ class BooksController extends Controller
         return view('library.book_page', compact('book'));                
     }
 
+    public function change_book($book_id)
+    {   
+        $user=\Auth::user(); 
+        if (\Auth::check()) {
+            $book = book::find($book_id);
+            if ($book !== null) {
+                if ($book->user_id == $user->id) {
+                    return view('library.change_book', compact('book'));
+                }
+            }
+        }              
+    }    
+
+    public function add_change_book(Request $request, $book_id)
+    {   
+        $user=\Auth::user(); 
+        if (\Auth::check()) {
+            $book = book::find($book_id);
+            if ($book !== null) {
+                if ($book->user_id == $user->id) {
+                    $title = strval($request->title); 
+                    $text = strval($request->text);
+                    book::where('id', '=', $book_id)->update(['title' => $title, 'text' => $text]); 
+                    $books = book::where('user_id','=',$user->id)->get();
+                    $this_user_id = $user->id;
+                    return view('library.library_main', compact('books', 'user', 'this_user_id')); 
+                }
+            }
+        }              
+    } 
 
 
     public function delete_book($book_id)

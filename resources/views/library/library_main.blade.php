@@ -10,15 +10,17 @@
           @forelse ($books as $book)
          <div><h1>{{$book->title}}</h1><br>
           <a href="/read_book/{{$book->id}}">Прочитать</a><br>
-          <a href="">Редактировать</a><br>
           <a href="/delete_book/{{$book->id}}">Удалить</a><br></div>
+          @if ($this_user_id == $user->id)
+          <a href="/change_book/{{$book->id}}">Редактировать</a><br>
           <a href="/access_for_all/{{$book->id}}">Открыть доступ по ссылке</a><br></div>
+          @endif
           @empty
           @endforelse
-          </div>
           @if ($this_user_id == $user->id)
           <a href="/new_book/{{$this_user_id}}">Создать книгу</a>
           @endif
+          </div>
       </div>
     </div>
   </div>

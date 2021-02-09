@@ -27,7 +27,7 @@ class CommentController extends Controller
                 Comments::where('id','=',$comment_id)->delete();                //Удаляю коммент
                 Comments::where('is_answer_id','=',$comment_id)->update(['comment_text' => 'Ответ на удаленный комментарий','title' => 'Ответ на удаленный комментарий', 'is_answer_id' => null]);
                 $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
-                return view('/home', compact('comments', 'to_user_id', 'user'));  
+                return view('/home', compact('comments', 'to_user_id', 'user')); 
             } else {                                                             //Если я нет прав на удаление
                 return view('welcome', compact('user'));       
             }
