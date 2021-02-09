@@ -12,6 +12,7 @@
           <a href="/read_book/{{$book->id}}">Прочитать</a><br>
           <a href="">Редактировать</a><br>
           <a href="/delete_book/{{$book->id}}">Удалить</a><br></div>
+          <a href="/access_for_all/{{$book->id}}">Открыть доступ по ссылке</a><br></div>
           @empty
           @endforelse
           </div>

@@ -11,6 +11,7 @@
 
           @forelse ($comments as $comment)
           <form action="/delete_comment">
+            {{ csrf_field() }}
             @if (!is_null($comment->is_answer_id))
             @foreach ($comments as $second_iteration_comm)
             @if ($comment->is_answer_id == $second_iteration_comm->id)
@@ -63,7 +64,7 @@
       @endif 
       @if (!is_null($user) && ($user->id == $to_user_id))
       <div><a href="/my_comments">Комментарии которые я оставил</a></div>     
-      <div><a href="/library_main/{{$to_user_id}}">Перейти в библиотеку</a></div>
+      <div><a href="/library_main/{{$to_user_id}}">Перейти в библиотеку</a></div>   
       @elseif (!is_null($user))
       <div><a href="/my_comments">Комментарии которые я оставил</a></div>     
       <div><a href="/library_main/{{$to_user_id}}">Перейти в библиотеку</a></div> 

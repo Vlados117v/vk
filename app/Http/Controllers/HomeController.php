@@ -25,21 +25,28 @@ class HomeController extends Controller
         $user = \Auth::user();
         return view('welcome', compact('user'));      
     }
-
+      
+      public function checkMD()
+  {
+    dd('You are in Controller Method');
+  }    
     public function index($this_user_id = 0)
     {   
         if (\Auth::check()){
-            $user = \Auth::user();
-            if ($user->id == $this_user_id) {
-                $to_user_id = $user->id;               
+            $this_user = User::where('id','=',$this_user_id)->first();
+            if ($this_user !== null) {
+                $user = \Auth::user();
+                if ($user->id == $this_user_id) {
+                    $to_user_id = $user->id;               
+                } else {
+                    $to_user_id = $this_user_id;           
+                }
                 $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
                 return view('home', compact('comments', 'to_user_id', 'user'));
             } else {
-                $to_user_id = $this_user_id;    
-                $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();   
-                return view('home', compact('comments', 'to_user_id', 'user'));        
+                $user = \Auth::user();
+                return view('welcome', compact('user'));  
             }
-
         } else {
             $to_user_id = -1; 
             $user = null;   

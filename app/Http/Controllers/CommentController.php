@@ -25,14 +25,9 @@ class CommentController extends Controller
             if (($to_user_id_req->user_id == $user->id) || ($to_user_id_req->to_user_id == $user->id)) {
                                                                                 //Если я автор или на домашней
                 Comments::where('id','=',$comment_id)->delete();                //Удаляю коммент
-                $all_comments = Comments::all();
-                foreach ($all_comments as $comment) {                           //Прохожу по комментариям на который был ответом
-                    if ($comment->is_answer_id == $comment_id) {
-                        Comments::where('is_answer_id','=',$comment_id)->update(['comment_text' => 'Ответ на удаленный комментарий','title' => 'Ответ на удаленный комментарий', 'is_answer_id' => null]);
-                    }
-                }
+                Comments::where('is_answer_id','=',$comment_id)->update(['comment_text' => 'Ответ на удаленный комментарий','title' => 'Ответ на удаленный комментарий', 'is_answer_id' => null]);
                 $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
-                return view('home', compact('comments', 'to_user_id', 'user')); 
+                return view('/home', compact('comments', 'to_user_id', 'user'));  
             } else {                                                             //Если я нет прав на удаление
                 return view('welcome', compact('user'));       
             }
@@ -71,9 +66,9 @@ class CommentController extends Controller
     Comments::insert(['user_id' => $user->id, 'to_user_id' => $to_user_id,'title' =>$title, 'comment_text' => $text, 'is_answer_id' => $comment_id]);
     $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
     return view('home', compact('comments', 'to_user_id', 'user'));
-    }  else {
+}  else {
     return view('welcome', compact('user'));         
-    } 
+} 
 }
 
 public function get_more_comments(Request $request)

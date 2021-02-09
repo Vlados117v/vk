@@ -33,7 +33,7 @@ Route::get('/answer/{to_comment_id}','CommentController@answer');
 
 Route::post('/add_answer/{comment_id}','CommentController@add_answer');
 
-Route::get('/library_main/{this_user_id?}','BooksController@library_main');
+Route::get('/library_main/{this_user_id?}','BooksController@library_main')->middleware("HaveAccess");
 
 Route::get('/new_book/{this_user_id}','BooksController@new_book_page');
 
@@ -41,6 +41,9 @@ Route::get('/add_new_book/{user_id}','BooksController@add_new_book');
 
 Route::get('/delete_book/{book_id}','BooksController@delete_book');
 
-Route::get('/read_book/{book_id}','BooksController@read_book');
+Route::get('/read_book/{book_id}','BooksController@read_book')->middleware("BookForAll");;
 
 Route::get('/add_friend/{to_user_id}','FriendController@add_friend');
+
+Route::get('/access_for_all/{book_id}','BooksController@access_for_all');
+

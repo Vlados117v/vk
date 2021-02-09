@@ -21,7 +21,7 @@ class FriendController extends Controller
     {   
         $user=\Auth::user();
         if (\Auth::check()) {
-           $already_friend = Friends::where('user_id', '=', $user->id)->where('friend_id', '=', $friend_id)->first();
+           $already_friend = Friends::where([['user_id', '=', $user->id],['friend_id', '=', $friend_id]])->first();
            if ($already_friend === null) {
                Friends::insert(['user_id' => $user->id,'friend_id' => $friend_id]);
                $comments = Comments::where('to_user_id','=',$friend_id)->take(5)->get();

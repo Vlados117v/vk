@@ -67,14 +67,28 @@ class BooksController extends Controller
         }    
     }
 
+    public function access_for_all($book_id)
+    {   
+        $user=\Auth::user();
+        $book = book::find($book_id);
+        if ($book !== null) {
+            if (\Auth::check()&&($user->id == $book->user_id)){
+            book::where('id', '=', $book_id)->update(['for_all_users' => 1]);    
+            return back()->withInput();
+            } else {
+            return view('welcome');          
+            } 
+        }  else {
+             return view('welcome');            
+        } 
+    }
+
+
     public function library_main($this_user_id = 0)
     {   
-        if (\Auth::check()){
         $user = \Auth::user();
-        $books = book::where('user_id','=',$this_user_id)->get();  
+        $books = book::where('user_id','=',$this_user_id)->get(); 
+        //$for_all_users = book::where([['user_id','=',$this_user_id],['for_all_users','=',1]])->get(); 
         return view('library.library_main', compact('books', 'user', 'this_user_id'));
-        } else {
-        return view('welcome');          
-        }    
     }
 }
