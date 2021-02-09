@@ -30,7 +30,6 @@ class HomeController extends Controller
     {   
         if (\Auth::check()){
             $user = \Auth::user();
-           // $is_owner = $this->is_owner($user->id);
             if ($user->id == $this_user_id) {
                 $to_user_id = $user->id;               
                 $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();

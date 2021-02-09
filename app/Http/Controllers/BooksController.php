@@ -16,53 +16,63 @@ class BooksController extends Controller
     }
 
 
-    public function delete_book($book_id)
+
+    public function read_book($book_id)
     {   
-       /* if (\Auth::check()){
-        $user=\Auth::user();
-        $book_auther = book::where('id','=',$book_id)->get();
-        $book_auther_id = $book_auther->user_id;
-        if ($user->id == $book_auther_id) {
-        book::where('id','=',$book_id)->delete();
-        $books = book::all();
-        return view('library.library_main', compact('books', 'user'));
-           }
-        } else {
-        return view('welcome');          
-        }  */  
+        $user=\Auth::user(); 
+        $book = book::find($book_id);         
+        return view('library.book_page', compact('book'));                
     }
 
 
-    public function add_new_book(Request $request)
+
+    public function delete_book($book_id)
     {   
-        if (\Auth::check()){
         $user=\Auth::user();
+        $book_auther = book::find($book_id);
+        if (\Auth::check()&&($user->id == $book_auther->user_id)){
+        $book_auther->delete();
+        $books = book::where('user_id','=',$user->id)->get(); 
+        $this_user_id = $user->id;
+        return view('library.library_main', compact('books', 'user', 'this_user_id'));
+        } else {
+        return view('welcome');          
+        }  
+    }
+
+
+    public function add_new_book(Request $request, $this_user_id)
+    {   
+        $user=\Auth::user();
+        if (\Auth::check()&&($user->id == $this_user_id)){
         $title = strval($request->title); 
         $text = strval($request->text);
         book::insert(['user_id' => $user->id,'title' =>$title, 'text' => $text]);
-        $books = book::all();
-        return view('library.library_main', compact('books', 'user'));
+        $books = book::where('user_id','=',$user->id)->get(); 
+        $this_user_id = $user->id;
+        return view('library.library_main', compact('books', 'user', 'this_user_id'));
         } else {
         return view('welcome');          
         }    
     }
 
 
-    public function new_book_page()
+    public function new_book_page($this_user_id)
     {   
-        if (\Auth::check()){
-        return view('library.create_book');
+        $user=\Auth::user();
+        if (\Auth::check()&&($user->id == $this_user_id)){
+        return view('library.create_book', compact('user'));
         } else {
         return view('welcome');          
         }    
     }
 
-    public function library_main()
+    public function library_main($this_user_id = 0)
     {   
         if (\Auth::check()){
         $user = \Auth::user();
-        $books = book::all();  
-        return view('library.library_main', compact('books', 'user'));
+        $books = book::where('user_id','=',$this_user_id)->get();  
+        return view('library.library_main', compact('books', 'user', 'this_user_id'));
         } else {
         return view('welcome');          
         }    

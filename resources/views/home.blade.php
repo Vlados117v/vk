@@ -61,9 +61,15 @@
           @endif
       </div>
       @endif 
-      @if (!is_null($user))
-      <div><a href="/my_comments">Комментарии которые я оставил</a></div>
-      <div><a href="/library_main">Перейти в библиотеку</a></div>
+      @if (!is_null($user) && ($user->id == $to_user_id))
+      <div><a href="/my_comments">Комментарии которые я оставил</a></div>     
+      <div><a href="/library_main/{{$to_user_id}}">Перейти в библиотеку</a></div>
+      @elseif (!is_null($user))
+      <div><a href="/my_comments">Комментарии которые я оставил</a></div>     
+      <div><a href="/library_main/{{$to_user_id}}">Перейти в библиотеку</a></div> 
+      <div><a href="/add_friend/{{$to_user_id}}">Добавить в друзья/Удалить из друзей</a></div> 
+      @else
+      <div><a href="/library_main/{{$to_user_id}}">Перейти в библиотеку</a></div>      
       @endif 
     </div>
   </div>
