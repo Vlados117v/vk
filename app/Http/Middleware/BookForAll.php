@@ -19,11 +19,12 @@ class BookForAll
      */
     public function handle($request, Closure $next)
     {                                    
-        $book_id = $request->route('book_id');                  
+        $book_id = $request->route('book_id');
+           
         if (book::find($book_id) !== null) {                      
-        $book = book::find($book_id);
+            $book = book::find($book_id);
             if ($book->for_all_users == 1) {
-            return $next($request);
+                return $next($request);
             } elseif (\Auth::check()) {
                 $user = \Auth::user();
                 $auther = $book->user_id;
@@ -31,9 +32,8 @@ class BookForAll
                 if ($user->id == $auther || ($is_friend)) {
                    return $next($request);
                 }
-               
             } else {
-                return view('welcome');
+                return back();
             }
           }                  
 

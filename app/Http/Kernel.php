@@ -62,6 +62,8 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'HaveAccess' => \App\Http\Middleware\HaveAccess::class,
         'BookForAll' => \App\Http\Middleware\BookForAll::class,
+        'OwnerOnlyBooks' => \App\Http\Middleware\OwnerOnlyBooks::class,
+        'AuthCheck' => \App\Http\Middleware\AuthCheck::class,
     ];
 
     /**
