@@ -25,8 +25,7 @@ class CommentController extends Controller
             if (($to_user_id_req->user_id == $user->id) || ($to_user_id_req->to_user_id == $user->id)) {
                 Comments::where('id','=',$comment_id)->delete();                
                 Comments::where('is_answer_id','=',$comment_id)->update(['comment_text' => 'Ответ на удаленный комментарий','title' => 'Ответ на удаленный комментарий', 'is_answer_id' => null]);
-                $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
-                return view('/home', compact('comments', 'to_user_id', 'user')); 
+                return redirect()->route('home', ['this_user_id' => $to_user_id]);
             } else {                                                            
                 return view('welcome', compact('user'));       
             }
@@ -41,8 +40,7 @@ class CommentController extends Controller
         $title = strval($request->title);        
         $user = \Auth::user();
         Comments::insert(['user_id' => $user->id, 'to_user_id' => $to_user_id,'title' =>$title, 'comment_text' => $text]);
-        $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
-        return view('home', compact('comments', 'to_user_id', 'user'));
+        return redirect()->route('home', ['this_user_id' => $to_user_id]);
     }
 
     public function answer($to_comment_id)
@@ -63,8 +61,7 @@ class CommentController extends Controller
             $title = $request->title;  // мой ответ
             $to_user_id = $comments->to_user_id;
             Comments::insert(['user_id' => $user->id, 'to_user_id' => $to_user_id,'title' =>$title, 'comment_text' => $text, 'is_answer_id' => $comment_id]);
-            $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
-            return view('home', compact('comments', 'to_user_id', 'user'));
+           return redirect()->route('home', ['this_user_id' => $to_user_id]);
         }  else {
             return view('welcome', compact('user'));         
         } 

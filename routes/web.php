@@ -23,7 +23,7 @@ Route::get('/delete_comment','CommentController@delete_comment');
 
 Route::get('/all','HomeController@show_users');
 
-Route::get('/any_user_comments/{user_id}', 'HomeController@any_user_comments');
+Route::get('/any_user_comments/{user_id}', 'HomeController@any_user_comments')->name('any_user_comments');
 
 Route::get('/get_more_comments', 'CommentController@get_more_comments');
 
