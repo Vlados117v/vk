@@ -22,7 +22,7 @@ class BooksController extends Controller
         $user=\Auth::user(); 
 
         $book = book::find($book_id);
-
+        //Тут мы не знаем текущего пользователя, больше условий нет
         if (empty($book)) {
             return back();
         }; 
@@ -34,7 +34,7 @@ class BooksController extends Controller
     {   
         $user=\Auth::user(); 
   
-        $book = book::find($book_id);
+        $book = book::where('id', '=', $book_id)->where('user_id', '=', $user->id)->get()->first();
 
         if (!empty($book) && ($book->user_id == $user->id)) {
             return view('library.change_book', compact('book'));
@@ -53,10 +53,10 @@ class BooksController extends Controller
 
         $title = strval($request->title); 
         $text = strval($request->text);
-        book::where('id', '=', $book_id)->update(['title' => $title, 'text' => $text]); 
-        $books = book::where('user_id','=',$user->id)->get();
-        $this_user_id = $user->id;
-        return view('library.library_main', compact('books', 'user', 'this_user_id')); 
+        book::where('id', '=', $book_id)->where('user_id', '=', $user->id)->update(['title' => $title, 'text' => $text]); 
+        // $book->update(['title' => $title, 'text' => $text]); не работает
+        return redirect()->action('BooksController@library_main', ['this_user_id' => $user->id]
+);
                               
     } 
 
@@ -65,20 +65,16 @@ class BooksController extends Controller
     {   
         $user=\Auth::user();
 
-        $book_auther = book::find($book_id);
+        $book_auther = book::where('id', '=', $book_id)->where('user_id', '=', $user->id)->get()->first();
 
         if (empty($book_auther)) {
             return back(); 
         };
 
-        if ($user->id == $book_auther->user_id){
-            book::find($book_id)->delete();
-            $books = book::where('user_id','=',$user->id)->get(); 
-            $this_user_id = $user->id;
-            return view('library.library_main', compact('books', 'user', 'this_user_id'));
-        } else {
-            return back();         
-        }  
+        $book_auther->delete();
+
+        return redirect()->action('BooksController@library_main', ['this_user_id' => $user->id]
+);
     }
 
 
@@ -90,9 +86,9 @@ class BooksController extends Controller
             $title = strval($request->title); 
             $text = strval($request->text);
             book::insert(['user_id' => $user->id,'title' =>$title, 'text' => $text]);
-            $books = book::where('user_id','=',$user->id)->get(); 
-            $this_user_id = $user->id;
-            return view('library.library_main', compact('books', 'user', 'this_user_id'));
+
+            return redirect()->action('BooksController@library_main', ['this_user_id' => $user->id]
+);
         } else {
             return back();       
         }    
@@ -114,18 +110,16 @@ class BooksController extends Controller
     {   
         $user=\Auth::user();
 
-        $book = book::find($book_id);
+        $book = book::where('id', '=', $book_id)->where('user_id', '=', $user->id)->get()->first();
 
-        if (empty($book_auther)) {
+        if (empty($book)) {
             return back();
         };
 
-        if ($user->id == $book->user_id){
-            book::where('id', '=', $book_id)->update(['for_all_users' => 1]);    
-            return back();
-        }  else {
-            return back();         
-        } 
+        book::where('id', '=', $book_id)->where('user_id', '=', $user->id)->update(['for_all_users' => 1]); 
+        // $book->update(['for_all_users' => 1]); не работает
+        return back();
+
     }
 
 

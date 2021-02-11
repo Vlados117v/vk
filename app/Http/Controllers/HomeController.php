@@ -44,7 +44,8 @@ class HomeController extends Controller
                 } else {
                     $to_user_id = $this_user_id;           
                 }
-                $comments = Comments::where('to_user_id','=',$to_user_id)->take(5)->get();
+                $comments = User::where('id','=',$this_user_id)->first()->comments()->take(5)->get();
+                //Отношение
                 return view('home', compact('comments', 'to_user_id', 'user'));
 
             } else {

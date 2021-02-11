@@ -23,18 +23,14 @@ class FriendController extends Controller
         if (\Auth::check()) {
            $already_friend = Friends::where([['user_id', '=', $user->id],['friend_id', '=', $friend_id]])->first();
 
-           if ($already_friend === null) {
+           if (empty($already_friend)) {
                Friends::insert(['user_id' => $user->id,'friend_id' => $friend_id]);
-               $comments = Comments::where('to_user_id','=',$friend_id)->take(5)->get();
-               $to_user_id = $friend_id;
-               return view('home', compact('comments', 'to_user_id', 'user'));
            } else {
                Friends::where('user_id', '=', $user->id)->where('friend_id', '=', $friend_id)->delete();
-               $comments = Comments::where('to_user_id','=',$friend_id)->take(5)->get();
-               $to_user_id = $friend_id;
-               return view('home', compact('comments', 'to_user_id', 'user'));
            }
-           
+
+           return redirect()->action('HomeController@index', ['this_user_id' => $friend_id]
+            );
        } else {
            return view('welcome'); 
        }
